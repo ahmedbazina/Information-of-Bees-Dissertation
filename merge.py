@@ -5,16 +5,16 @@ print("Welcome to Excel worksheet merger")
 print("All files must be .csv file format in order for the program to work")
 print("Please answer the following>>")
 print("........................................")
-sleep(1)
-# Start timer
+sleep(1
+)# Start timer
 start = time()
 
 # Asking user for file names
 file1 = input("Please enter the 1st excel file name:\n")
 file2 = input("Please enter the 2nd excel file name:\n")
 
-print("........................................")
-sleep(1)
+print("........................................"
+)sleep(1)
 print("<<<<<<<<<<Files read sucessfully>>>>>>>>>>")
 # print(excel1)
 # print(excel2)
@@ -47,9 +47,3 @@ stop = time()
 total = round(stop - start, 1)
 print("Total time taken in seconds: ", total)
 print("........................................")
-
-
-# Remove unwanted columns before exporting
-# check duplicated data and remove it (if needed) Check
-
-

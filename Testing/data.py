@@ -1,25 +1,36 @@
+#import packages 
 import pandas as pd
+from io import StringIO
+import matplotlib as plt
+import datetime
 
-# filenames
-excel_names = ["flow_wurzburg.xlsx", "humidity_wurzburg.xlsx", "temperature_wurzburg.xlsx", "weight_wurzburg.xlsx"]
+#file paths
+flow_sch = "C:/Users/Ahmed Bazina/OneDrive/Documents/Information-of-Bees-Dissertation/Kaggle data/Schwartau/flow_schwartau.csv"
+temperature_sch = "C:/Users/Ahmed Bazina/OneDrive/Documents/Information-of-Bees-Dissertation/Kaggle data/Schwartau/temperature_schwartau.csv"
 
-# read them in
-excels = [pd.ExcelFile(name) for name in excel_names]
+#The mean per hour() method accepts the files as an argument and organises the data by day.
+#groups data per day: sum of flow and mean temperature, weight and humidity
 
-# turn them into dataframes
-frames = [x.parse(x.sheet_names[0], header=None,index_col=None) for x in excels]
+def DataPerDay(datafile):
+    name = str(datafile)
+    datafile = pd.read_csv(datafile, sep=',', decimal=".")
+    datafile['timestamp'] = pd.to_datetime(datafile['timestamp'])
+    datafile.sort_values(by="timestamp")  #sort values by date
+    datafile.set_index('timestamp', inplace=True) #date as index
+    #if file contains flow then group and sum it otherwise group and mean the rest of files and if Nan is found fill value with data from previous day
+    print(name)
+    if "flow" in name: 
+        datafile = datafile.groupby(pd.Grouper(freq='D')).sum() 
+        datafile.ffill()
+    else: 
+        datafile = datafile.groupby(pd.Grouper(freq='D')).mean() 
+        datafile.ffill()
+    return datafile 
 
-# delete the first row for all frames except the first
-# i.e. remove the header row -- assumes it's the first
-frames[1:] = [df[1:] for df in frames[1:]]
+#calling DataPerDay function on the input files
+flow_sch = DataPerDay(flow_sch)
+temperature_sch = DataPerDay(temperature_sch)
+weight_sch = DataPerDay(weight_sch)
+humidity_sch = DataPerDay(humidity_sch)
 
-# concatenate them..
-combined = pd.concat(frames)
-
-# write it out
-combined.to_excel("output.xlsx", header=False, index=False)
-
-
-
-# taking user input
 
